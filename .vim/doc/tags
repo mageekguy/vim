@@ -1,0 +1,14 @@
+/	php/doc/apache-request-headers.txt	/*\/*
+NOT	php/doc/strtr.txt	/*NOT*
+atoum	atoum.txt	/*atoum*
+atoum-:Atoum	atoum.txt	/*atoum-:Atoum*
+atoum-<CR>	atoum.txt	/*atoum-<CR>*
+atoum-author	atoum.txt	/*atoum-author*
+atoum-commands	atoum.txt	/*atoum-commands*
+atoum-introduction	atoum.txt	/*atoum-introduction*
+atoum-mappings	atoum.txt	/*atoum-mappings*
+atoum-plugin	atoum.txt	/*atoum-plugin*
+atoum-variables	atoum.txt	/*atoum-variables*
+atoum.txt	atoum.txt	/*atoum.txt*
+estimated	php/doc/ifx-getsqlca.txt	/*estimated*
+fugitive-<localleader><CR>	atoum.txt	/*fugitive-<localleader><CR>*
