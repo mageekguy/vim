@@ -24,13 +24,19 @@ function myphp#cleanFile()
 	execute 'normal m`'
 	%s/\s\+$//ge
 	%s/^\s\+$//ge
-	if (!&expandtab)
+	if (!&expandtab && search('^ \+', 'cnw'))
 		:retab
 	endif
+	if (&fileformat != 'unix')
+		setlocal fileformat=unix
+	endif
+	if (&filencoding != 'utf8')
+		setlocal fileencoding=utf8
+	endif
+	if (&encoding != 'utf8')
+		setlocal encoding=utf8
+	endif
 	execute 'normal ``'
-	setlocal fileformat=unix
-	setlocal fileencoding=utf8
-	setlocal encoding=utf8
 endfunction
 
 " vim:filetype=vim foldmethod=marker shiftwidth=3 tabstop=3
