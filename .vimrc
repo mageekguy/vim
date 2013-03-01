@@ -6,7 +6,6 @@ set nocompatible
 set autoindent
 set cindent
 set backspace=indent,eol,start
-set browsedir=buffer
 set cmdheight=1
 set completeopt=longest,menuone
 set cursorline
@@ -20,7 +19,6 @@ set foldclose=
 set foldmethod=syntax
 set hlsearch
 set incsearch
-set keymodel=startsel
 set laststatus=2
 set lcs=tab:\|\ ,trail:-,precedes:<,extends:>
 set list
@@ -104,7 +102,7 @@ nnoremap <silent> <C-MouseUp> <C-W>+
 nnoremap <silent> <C-PageDown> zj
 nnoremap <silent> <C-PageUp> zk
 nnoremap <silent> <space>  za
-nnoremap <silent> <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
+nnoremap <silent> <expr> <leader>p '`[' . strpart(getregtype(), 0, 1) . '`]'
 nnoremap <silent> . .`[
 nnoremap <silent> <F11> :Shell!<CR>
 
@@ -137,7 +135,7 @@ au! WinLeave * set nocursorline nocursorcolumn
 au! WinEnter * set cursorline nocursorcolumn
 
 augroup fch
-	execute 'au! BufWritePost ' . resolve($MYVIMRC) . ' source %'
+	execute 'au! BufWritePost .vimrc source %'
 augroup end
 
 let g:phpErrorMarker#autowrite = 1
