@@ -30,11 +30,11 @@ function myphp#cleanFile()
 	if (&fileformat != 'unix')
 		setlocal fileformat=unix
 	endif
-	if (&fileencoding != 'utf8')
-		setlocal fileencoding=utf8
+	if (&fileencoding != 'utf-8')
+		setlocal fileencoding=utf-8
 	endif
 	if (&encoding != 'utf8')
-		setlocal encoding=utf8
+		setlocal encoding=utf-8
 	endif
 	execute 'normal ``'
 endfunction
