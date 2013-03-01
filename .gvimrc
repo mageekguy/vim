@@ -9,20 +9,17 @@ set guioptions-=r
 set guioptions-=L
 set guioptions-=b
 set guioptions+=h
-set lcs=tab:˒\ ,trail:-,precedes:<,extends:>
-set noerrorbells
-set novisualbell
-set vb t_vb=
-set linespace=2
+set lcs=tab:│\ ,trail:-,precedes:<,extends:>
 set antialias
 
 if has("gui_macvim")
 	set fu
 	set fuopt+=maxhorz
 	set fuopt+=maxvert
+	set guifont=Monaco:h11
 	let macvim_skip_cmd_opt_movement = 1
 endif
 
 augroup fch
-	execute 'au! BufWritePost ' . resolve($MYGVIMRC) . ' source %'
+	execute 'au! BufWritePost .gvimrc source %'
 augroup end
