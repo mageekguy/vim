@@ -101,7 +101,7 @@ nnoremap <silent> <C-MouseDown> <C-W>-
 nnoremap <silent> <C-MouseUp> <C-W>+
 nnoremap <silent> <C-PageDown> zj
 nnoremap <silent> <C-PageUp> zk
-nnoremap <silent> <space>  za
+nnoremap <silent> <Space>  za
 nnoremap <silent> <expr> <leader>p '`[' . strpart(getregtype(), 0, 1) . '`]'
 nnoremap <silent> . .`[
 nnoremap <silent> <F11> :Shell!<CR>
@@ -123,11 +123,13 @@ vnoremap > >gv
 vnoremap / <Esc>/\%V\%V<Left><Left><Left>
 vnoremap ? <Esc>?\%V\%V<Left><Left><Left>
 
+inoremap <expr> <Space> pumvisible() ? "\<C-y><Space>" :"\<C-g>u\<Space>"
+inoremap <expr> <Right> pumvisible() ? "\<C-y>" :"\<C-g>u\<Right>"
 inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 inoremap <expr> <C-n> pumvisible() ? '<C-n>' : '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
 inoremap <expr> <M-,> pumvisible() ? '<C-n>' : '<C-x><C-o><C-n><C-p><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
+inoremap <expr> <C-Tab> pumvisible() ? "<Down>" : "<C-N><Down>"
 
-inoremap <C-Tab> <C-N>
 inoremap <C-S-Tab> <C-X><C-O>
 
 au! BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute "normal! g'\"" | endif
