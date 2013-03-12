@@ -18,7 +18,7 @@ if (!exists('myphp#disable') || myphp#disable <= 0) && !exists('b:myphp_loaded')
 	setlocal foldtext=myphp#foldText()
 
 	nnoremap <buffer> <silent> <CR> :Atoum<CR>
-	nnoremap <buffer> <silent> <C-CR> :Atoum --debug<CR>
+	nnoremap <buffer> <silent> <C-CR> :AtoumDebugSwitch<CR>
 	nnoremap <buffer> <silent> <S-CR> :execute ':Atoum -m *::' . substitute(getline(search('.*function\s\+test[^(]\+(', 'cnb')), '.*function\s\+\(test[^(]\+\)(.*$', '\1', '')<CR>
 
 	augroup myphp

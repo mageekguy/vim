@@ -6,6 +6,9 @@
 if !exists('g:atoum#php')
 	let g:atoum#php = 'php'
 endif
+if !exists('g:atoum#debug')
+	let g:atoum#debug = 0
+endif
 if !exists('g:atoum#_')
 	let g:atoum#_ = ''
 endif
@@ -34,7 +37,7 @@ function atoum#run(file, bang, args)
 
 		2d _ | resize 1 | redraw
 
-		execute 'silent! %!' . _ . ' ' . a:args
+		execute 'silent! %!' . _ . ' ' . a:args . (g:atoum#debug ? ' --debug' : '')
 		execute 'resize ' . line('$')
 		execute 'nnoremap <silent> <buffer> <CR> :call atoum#run(''' . a:file . ''', '''', ''' . a:args . ''')<CR>'
 		execute 'nnoremap <silent> <buffer> <LocalLeader>g :execute bufwinnr(' . bufnr . ') . ''wincmd w''<CR>'

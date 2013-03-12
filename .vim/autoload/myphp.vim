@@ -25,7 +25,7 @@ function myphp#cleanFile()
 	%s/\s\+$//ge
 	%s/^\s\+$//ge
 	if (!&expandtab && search('^ \+', 'cnw'))
-		:retab
+		:%retab! &ts
 	endif
 	if (&fileformat != 'unix')
 		setlocal fileformat=unix
