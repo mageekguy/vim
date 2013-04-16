@@ -11,6 +11,7 @@ set guioptions-=b
 set guioptions+=h
 set lcs=tab:│\ ,trail:-,precedes:<,extends:>
 set antialias
+set vb t_vb=
 
 if has("gui_macvim")
 	set fu

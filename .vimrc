@@ -49,6 +49,7 @@ set synmaxcol=1000
 set tabstop=3
 set title
 set ttyfast
+set lazyredraw
 set viminfo='20,\"50,:20,%,n~/.viminfo
 set wildmenu
 set wildmode=longest:full
@@ -58,7 +59,6 @@ set winminheight=0
 set winminwidth=0
 set whichwrap=<,>,h,l,[,]
 set noerrorbells
-set novisualbell
 set vb t_vb=
 set selection=inclusive
 set splitbelow
@@ -128,7 +128,7 @@ inoremap <expr> <Right> pumvisible() ? "\<C-y>" :"\<C-g>u\<Right>"
 inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 inoremap <expr> <C-n> pumvisible() ? '<C-n>' : '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
 inoremap <expr> <M-,> pumvisible() ? '<C-n>' : '<C-x><C-o><C-n><C-p><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
-inoremap <expr> <C-Tab> pumvisible() ? "<Down>" : "<C-N><Down>"
+inoremap <expr> <C-Tab> pumvisible() ? "<Down>" : '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
 
 inoremap <C-S-Tab> <C-X><C-O>
 

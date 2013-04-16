@@ -1,9 +1,0 @@
-let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =7
-let g:netrw_dirhist_1='/Users/fch/atoum/repository/classes'
-let g:netrw_dirhist_2='/Users/fch/atoum/repository/classes/asserters/mock'
-let g:netrw_dirhist_3='/Users/fch/atoum/repository/classes/asserters'
-let g:netrw_dirhist_4='/Users/fch/atoum/repository/tests/units/classes/mock/controller'
-let g:netrw_dirhist_5='/Users/fch/Vim/.vim/ftplugin/php'
-let g:netrw_dirhist_6='/Users/fch/Thot/repository/tests/units/classes/calendar/generator'
-let g:netrw_dirhist_7='/Users/fch/Thot/repository/tests/units/classes/calendar'
