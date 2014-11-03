@@ -18,7 +18,6 @@ set fillchars=fold:\
 set foldclose=
 set foldmethod=syntax
 set hlsearch
-set incsearch
 set laststatus=2
 set lcs=tab:\|\ ,trail:-,precedes:<,extends:>
 set list
@@ -38,9 +37,11 @@ set showcmd
 set showmatch
 set showmode
 set showtabline=1
-set gdefault
 set sidescroll=1
 set sidescrolloff=5
+set gdefault
+set incsearch
+set ignorecase
 set smartcase
 set smarttab
 set statusline=%<%w%f\ %=%y[%{&ff}][%{(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\")}][%6c][%{printf('%'.strlen(line('$')).'s',line('.'))}/%L][%3p%%]%{'['.(&readonly?'RO':'\ \ ').']'}%{'['.(&modified?'+':'-').']'}
@@ -64,6 +65,7 @@ set selection=inclusive
 set splitbelow
 set splitright
 set noequalalways
+set nojoinspaces
 set background=dark
 
 if v:version >= 703
@@ -71,7 +73,7 @@ if v:version >= 703
 	set undodir=~/.vimundo
 	set norelativenumber
 
-	nnoremap <silent> <F2> :execute 'set ' . (&relativenumber ? 'number' : 'relativenumber')<CR>
+	nnoremap <silent> <F2> :execute 'set ' . (&relativenumber ? 'norelativenumber' : 'relativenumber')<CR>
 endif
 
 let &t_Co=256
@@ -88,17 +90,14 @@ let maplocalleader = ','
 
 filetype plugin on
 
-nnoremap <silent> <MiddleMouse> <LeftMouse><C-W>_
 nnoremap <silent> <C-Up> <C-W>W
 nnoremap <silent> <C-Left> <C-W>h
 nnoremap <silent> <C-Down> <C-W>w
 nnoremap <silent> <C-Right> <C-W>l
 nnoremap <silent> <C-S-Up> <C-W>k\|:execute 'resize ' . line('$')<CR>
 nnoremap <silent> <C-S-Down> <C-W>j\|:execute 'resize ' . line('$')<CR>
+nnoremap <silent> <Tab> <C-W>x\|:execute 'resize ' . line('$')<CR>
 nnoremap <silent> <C-S-Enter> <C-W>_
-nnoremap <silent> <C-RightMouse> <C-W>q
-nnoremap <silent> <C-MouseDown> <C-W>-
-nnoremap <silent> <C-MouseUp> <C-W>+
 nnoremap <silent> <C-PageDown> zj
 nnoremap <silent> <C-PageUp> zk
 nnoremap <silent> <Space>  za
