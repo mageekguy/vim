@@ -119,7 +119,7 @@ if !exists('b:current_syntax')
 	highlight default atoumExceptionDescription guifg=White ctermfg=White
 
 	syntax match atoumExceptionMethod '.\+::.\+():$' contained
-	syntax match atoumExceptionMethod 'Exception throwed in .\+ on line \d\+:' contained
+	syntax match atoumExceptionMethod 'An exception has been thrown in .\+ on line \d\+:' contained
 	highlight default atoumExceptionMethod guifg=Magenta ctermfg=Magenta
 
 	syntax match atoumExceptionTitle 'There \(is\|are\) \d\+ exceptions\?:$' contained
@@ -165,10 +165,10 @@ if !exists('b:current_syntax')
 	syntax match atoumOutputPrompt '^=> ' contained
 	highlight default atoumOutputPrompt guifg=Gray ctermfg=Gray
 
-	syntax match atoumSuccess '^Success ([^)]\+) !'
+	syntax match atoumSuccess '^Success ([^)]\+)!'
 	highlight default atoumSuccess term=bold cterm=bold guifg=White guibg=DarkGreen ctermfg=White ctermbg=DarkGreen
 
-	syntax match atoumFailure '^Failure ([^)]\+) !'
+	syntax match atoumFailure '^Failure ([^)]\+)!'
 	highlight default atoumFailure term=bold cterm=bold guifg=White guibg=DarkRed ctermfg=White ctermbg=DarkRed
 
 	syntax match diffRemoved	"^-.*"

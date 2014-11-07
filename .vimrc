@@ -4,6 +4,8 @@
 "=============================================================================
 set nocompatible
 set autoindent
+set autoread
+set linebreak
 set cindent
 set backspace=indent,eol,start
 set cmdheight=1
@@ -90,6 +92,12 @@ let maplocalleader = ','
 
 filetype plugin on
 
+noremap! "" ""<left>
+noremap! '' ''<left>
+noremap! (( ()<left>
+noremap! [[ []<left>
+noremap! {{ {<CR>}<CR><Esc><up><up>o
+
 nnoremap <silent> <C-Up> <C-W>W
 nnoremap <silent> <C-Left> <C-W>h
 nnoremap <silent> <C-Down> <C-W>w
@@ -104,6 +112,9 @@ nnoremap <silent> <Space>  za
 nnoremap <silent> <expr> <leader>p '`[' . strpart(getregtype(), 0, 1) . '`]'
 nnoremap <silent> . .`[
 nnoremap <silent> <F11> :Shell!<CR>
+nnoremap <silent> gf :sp <cfile><CR>
+nnoremap * *N
+nnoremap # #N
 
 function! s:SkipWhiteLine(direction)
 	execute 'normal ' . a:direction
@@ -113,8 +124,8 @@ function! s:SkipWhiteLine(direction)
 	endwhile
 endfunction
 
-nnoremap <PageUp> :call <SID>SkipWhiteLine('k')<CR>
-nnoremap <PageDown> :call <SID>SkipWhiteLine('j')<CR>
+nnoremap <silent> <PageUp> :call <SID>SkipWhiteLine('k')<CR>
+nnoremap <silent> <PageDown> :call <SID>SkipWhiteLine('j')<CR>
 nnoremap \ m`:keepjumps normal ggVG<CR><Esc>``/\%V\%V<Left><Left><Left>
 
 vnoremap < <gv
@@ -135,7 +146,7 @@ au! BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute "norm
 au! WinLeave * set nocursorline nocursorcolumn
 au! WinEnter * set cursorline nocursorcolumn
 
-augroup fch
+augroup vimrc
 	execute 'au! BufWritePost .vimrc source %'
 augroup end
 
@@ -189,7 +200,7 @@ endfunction
 
 command! -nargs=0 GitPrevious call s:GitPrevious()
 
-call atoum#defineConfiguration('/Users/fch/Atoum/repository', '/Users/fch/Atoum/repository/vim.php', '.php')
+call atoum#defineConfiguration('/Users/fch/Atoum/repository', '/Users/fch/Atoum/repository/.atoum.vim.php', '.php')
 
 " Color in active status line
 autocmd BufEnter * hi statusline guibg=#859900 guifg=Black gui=NONE
