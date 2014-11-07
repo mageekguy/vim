@@ -17,9 +17,22 @@ if (!exists('myphp#disable') || myphp#disable <= 0) && !exists('b:myphp_loaded')
 	setlocal matchpairs-=<:>
 	setlocal foldtext=myphp#foldText()
 
+	nnoremap <buffer> <silent> <C-F> :call <SID>selectFunctionInVisualMode()<CR>
+
 	nnoremap <buffer> <silent> <CR> :Atoum<CR>
 	nnoremap <buffer> <silent> <C-CR> :AtoumDebugSwitch<CR>
 	nnoremap <buffer> <silent> <S-CR> :execute ':Atoum -m *::' . substitute(getline(search('.*function\s\+test[^(]\+(', 'cnb')), '.*function\s\+\(test[^(]\+\)(.*$', '\1', '')<CR>
+
+	command! -buffer -range=% -nargs=? SpaceToTab execute '<line1>,<line2>s#^\( \{'.(<q-args> ? <q-args> : &ts).'\}\)\+#\=repeat("\t", len(submatch(0))/' . &ts . ')#e'
+
+	function! s:selectFunctionInVisualMode()
+		let currentWord =  '\\$' . expand('<cword>')
+		execute 'keepjumps ?function'
+		execute 'keepjumps /{'
+		execute 'keepjumps normal vi{'
+		echomsg 'normal! /\\%V' . currentWord . '\\%V'
+		execute 'normal! /\\%V' . currentWord . '\\%V'
+	endfunction
 
 	augroup myphp
 		au! * <buffer>

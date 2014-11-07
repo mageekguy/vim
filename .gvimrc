@@ -14,11 +14,10 @@ set antialias
 set vb t_vb=
 
 if has("gui_macvim")
-	set fu
 	set fuopt+=maxhorz
 	set fuopt+=maxvert
 	set guifont=Monaco:h11
-	let macvim_skip_cmd_opt_movement = 1
+	let macvim_skip_cmd_opt_movement=1
 endif
 
 augroup fch

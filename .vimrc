@@ -104,6 +104,9 @@ nnoremap <silent> <Space>  za
 nnoremap <silent> <expr> <leader>p '`[' . strpart(getregtype(), 0, 1) . '`]'
 nnoremap <silent> . .`[
 nnoremap <silent> <F11> :Shell!<CR>
+nnoremap <silent> gf :sp <cfile><CR>
+nnoremap * *N
+nnoremap # #N
 
 function! s:SkipWhiteLine(direction)
 	execute 'normal ' . a:direction
@@ -113,8 +116,8 @@ function! s:SkipWhiteLine(direction)
 	endwhile
 endfunction
 
-nnoremap <PageUp> :call <SID>SkipWhiteLine('k')<CR>
-nnoremap <PageDown> :call <SID>SkipWhiteLine('j')<CR>
+nnoremap <silent> <PageUp> :call <SID>SkipWhiteLine('k')<CR>
+nnoremap <silent> <PageDown> :call <SID>SkipWhiteLine('j')<CR>
 nnoremap \ m`:keepjumps normal ggVG<CR><Esc>``/\%V\%V<Left><Left><Left>
 
 vnoremap < <gv
@@ -189,7 +192,7 @@ endfunction
 
 command! -nargs=0 GitPrevious call s:GitPrevious()
 
-call atoum#defineConfiguration('/Users/fch/Atoum/repository', '/Users/fch/Atoum/repository/vim.php', '.php')
+call atoum#defineConfiguration('/Users/fch/Atoum/repository', '/Users/fch/Atoum/repository/.atoum.vim.php', '.php')
 
 " Color in active status line
 autocmd BufEnter * hi statusline guibg=#859900 guifg=Black gui=NONE
