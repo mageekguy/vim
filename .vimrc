@@ -142,14 +142,6 @@ inoremap <expr> <C-Tab> pumvisible() ? "<Down>" : '<C-n><C-r>=pumvisible() ? "\<
 
 inoremap <C-S-Tab> <C-X><C-O>
 
-au! BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute "normal! g'\"" | endif
-au! WinLeave * set nocursorline nocursorcolumn
-au! WinEnter * set cursorline nocursorcolumn
-
-augroup vimrc
-	execute 'au! BufWritePost .vimrc source %'
-augroup end
-
 let g:phpErrorMarker#autowrite = 1
 let g:phpErrorMarker#automake = 1
 
@@ -202,11 +194,25 @@ command! -nargs=0 GitPrevious call s:GitPrevious()
 
 call atoum#defineConfiguration('/Users/fch/Atoum/repository', '/Users/fch/Atoum/repository/.atoum.vim.php', '.php')
 
-" Color in active status line
-autocmd BufEnter * hi statusline guibg=#859900 guifg=Black gui=NONE
-autocmd BufEnter * hi wildmenu guibg=DarkGreen gui=NONE
+augroup vimrc
+	au!
 
-" Create directory if not exists
-au! BufWritePre * :silent !mkdir -p %:h
+	" Color in active status line
+	au BufWinEnter,WinEnter * hi statusline guibg=Cyan guifg=Black gui=NONE
+
+	au WinEnter * hi wildmenu guibg=DarkGreen gui=NONE
+	au WinEnter * set cursorline nocursorcolumn
+
+	" Fullscreen when open
+	au BufWinEnter * :execute "normal \<C-W>_"
+
+	" Create directory if not exists
+	au BufWritePre * :silent !mkdir -p %:h
+
+	au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute "normal! g'\"" | endif
+	au WinLeave * set nocursorline nocursorcolumn
+
+	execute 'au BufWritePost .vimrc source %'
+augroup end
 
 runtime! plugin/**/*.vim

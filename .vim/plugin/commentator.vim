@@ -32,7 +32,8 @@ if (!exists('g:commentator#disable') || g:commentator#disable <= 0) && !exists('
 		vnoremap <SID>commentatorComment :call commentator#toggleComment(1)<CR>
 
 		augroup commentator
-		au! Filetype * call commentator#setToken()
+			au!
+			au Filetype * call commentator#setToken()
 		augroup end
 
 		let &cpo = s:cpo
