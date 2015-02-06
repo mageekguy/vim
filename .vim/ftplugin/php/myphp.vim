@@ -75,6 +75,7 @@ augroup myphp
 	au InsertEnter <buffer> if !exists('w:lastFoldMethod') | let w:lastFoldMethod=&foldmethod | setlocal foldmethod=manual | endif
 	au InsertLeave,WinLeave <buffer> if exists('w:lastFoldMethod') | let &l:foldmethod=w:lastFoldMethod | unlet w:lastFoldMethod | endif
 	au BufRead,BufWrite <buffer> call <SID>cleanFile()
+	au BufEnter <buffer> setlocal foldtext=MyPhpFoldText()
 augroup end
 
 " vim:filetype=vim foldmethod=marker shiftwidth=3 tabstop=3
