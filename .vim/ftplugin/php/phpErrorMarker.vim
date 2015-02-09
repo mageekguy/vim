@@ -20,11 +20,12 @@ if (!exists('phpErrorMarker#disable') || phpErrorMarker#disable <= 0) && !exists
 
 		augroup phpErrorMarker
 			au!
-			au QuickFixCmdPre make call phpErrorMarker#autowrite()
 			au BufWritePost <buffer> call phpErrorMarker#automake()
-			au QuickFixCmdPost make call phpErrorMarker#markErrors()
 			au InsertLeave <buffer> call phpErrorMarker#unmarkErrors()
 		augroup end
+
+		au! QuickFixCmdPre make call phpErrorMarker#autowrite()
+		au! QuickFixCmdPost make call phpErrorMarker#markErrors()
 
 		command -buffer -nargs=0 MarkPhpErrors call phpErrorMarker#markErrors()
 		command -buffer -nargs=0 UnmarkPhpErrors call phpErrorMarker#unmarkErrors()
