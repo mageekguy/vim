@@ -46,12 +46,12 @@ function atoum#run(file, bang, args)
 		nnoremap <silent> <buffer> <LocalLeader><CR> :call atoum#goToFailure(getline('.'))<CR>
 
 		augroup atoum
-		au!
-		execute 'autocmd BufUnload <buffer> execute bufwinnr(' . bufnr . ') . ''wincmd w'''
-		execute 'autocmd BufEnter <buffer> execute ''resize '' .  line(''$'')'
-		autocmd BufEnter <buffer> let g:atoum#cursorline = &cursorline | set nocursorline | call atoum#highlightStatusLine()
-		autocmd BufLeave <buffer> if (g:atoum#cursorline) | set cursorline | endif
-		autocmd BufWinLeave <buffer> au! atoum
+			au!
+			execute 'autocmd BufUnload <buffer> execute bufwinnr(' . bufnr . ') . ''wincmd w'''
+			execute 'autocmd BufEnter <buffer> execute ''resize '' .  line(''$'')'
+			au BufEnter <buffer> let g:atoum#cursorline = &cursorline | set nocursorline | call atoum#highlightStatusLine()
+			au BufLeave <buffer> if (g:atoum#cursorline) | set cursorline | endif
+			au BufWinLeave <buffer> au! atoum
 		augroup end
 
 		let g:atoum#success = search('^Success ', 'w')

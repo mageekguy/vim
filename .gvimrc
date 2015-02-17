@@ -21,5 +21,5 @@ if has("gui_macvim")
 endif
 
 augroup fch
-	execute 'au! BufWritePost .gvimrc source %'
+	execute 'au BufWritePost .gvimrc source %'
 augroup end

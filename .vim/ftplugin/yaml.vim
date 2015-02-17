@@ -6,7 +6,7 @@ if (!exists('yaml#disable') || yaml#disable <= 0) && !exists('b:yaml_loaded')
 	let b:yaml_loaded = 1
 
 	augroup yaml
-		au! * <buffer>
+		au!
 		au BufCreate,BufRead,BufWrite <buffer> silent! %s///ge
 		au BufCreate,BufRead,BufWrite <buffer> silent! %s/\s\+$//ge
 		au BufCreate,BufRead,BufWrite <buffer> silent! %s/^\s\+$//ge
