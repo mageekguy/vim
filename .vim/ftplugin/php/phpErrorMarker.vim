@@ -19,13 +19,11 @@ if (!exists('phpErrorMarker#disable') || phpErrorMarker#disable <= 0) && !exists
 		let &errorformat = g:phpErrorMarker#errorformat
 
 		augroup phpErrorMarker
-			au!
-			au BufWritePost <buffer> call phpErrorMarker#automake()
-			au InsertLeave <buffer> call phpErrorMarker#unmarkErrors()
+			au! BufWritePost <buffer> call phpErrorMarker#automake()
+			au! InsertLeave <buffer> call phpErrorMarker#unmarkErrors()
+			au! QuickFixCmdPre make call phpErrorMarker#autowrite()
+			au! QuickFixCmdPost make call phpErrorMarker#markErrors()
 		augroup end
-
-		au! QuickFixCmdPre make call phpErrorMarker#autowrite()
-		au! QuickFixCmdPost make call phpErrorMarker#markErrors()
 
 		command -buffer -nargs=0 MarkPhpErrors call phpErrorMarker#markErrors()
 		command -buffer -nargs=0 UnmarkPhpErrors call phpErrorMarker#unmarkErrors()

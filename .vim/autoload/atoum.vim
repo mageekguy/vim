@@ -25,7 +25,7 @@ function atoum#run(file, bang, args)
 		execute  winnr < 0 ? 'new ' . fnameescape(_) : winnr . 'wincmd w'
 
 		set filetype=atoum
-		setlocal buftype=nowrite bufhidden=wipe nobuflisted noswapfile nowrap nonumber nocursorline
+		setlocal buftype=nowrite bufhidden=wipe nobuflisted noswapfile nonumber nocursorline wrap linebreak
 
 		%d _
 
@@ -39,6 +39,7 @@ function atoum#run(file, bang, args)
 
 		execute 'silent! %!' . _ . ' ' . a:args . (g:atoum#debug ? ' --debug' : '')
 		execute 'resize ' . line('$')
+		execute 'setlocal statusline=' .  a:file
 		execute 'nnoremap <silent> <buffer> <CR> :call atoum#run(''' . a:file . ''', '''', ''' . a:args . ''')<CR>'
 		execute 'nnoremap <silent> <buffer> <LocalLeader>g :execute bufwinnr(' . bufnr . ') . ''wincmd w''<CR>'
 
@@ -49,6 +50,7 @@ function atoum#run(file, bang, args)
 			au!
 			execute 'autocmd BufUnload <buffer> execute bufwinnr(' . bufnr . ') . ''wincmd w'''
 			execute 'autocmd BufEnter <buffer> execute ''resize '' .  line(''$'')'
+			execute 'autocmd BufEnter <buffer> execute ''setlocal statusline=' .  a:file . ''''
 			au BufEnter <buffer> let g:atoum#cursorline = &cursorline | set nocursorline | call atoum#highlightStatusLine()
 			au BufLeave <buffer> if (g:atoum#cursorline) | set cursorline | endif
 			au BufWinLeave <buffer> au! atoum

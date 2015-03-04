@@ -44,6 +44,7 @@ set sidescrolloff=5
 set gdefault
 set incsearch
 set ignorecase
+set wildignorecase
 set smartcase
 set smarttab
 set statusline=%<%w%f\ %=%y[%{&ff}][%{(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\")}][%6c][%{printf('%'.strlen(line('$')).'s',line('.'))}/%L][%3p%%]%{'['.(&readonly?'RO':'\ \ ').']'}%{'['.(&modified?'+':'-').']'}
