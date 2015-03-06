@@ -22,9 +22,14 @@ function atoum#run(file, bang, args)
 		let bufnr = bufnr('%')
 		let winnr = bufwinnr('^' . fnameescape(_) . '$')
 
-		execute  winnr < 0 ? 'new ' . fnameescape(_) : winnr . 'wincmd w'
+		execute winnr < 0 ? 'new ' . fnameescape(_) : winnr . 'wincmd w'
 
 		set filetype=atoum
+
+		if (!exists('b:oldtitlestring'))
+			let b:oldtitlestring = &titlestring
+		endif
+
 		setlocal buftype=nowrite bufhidden=wipe nobuflisted noswapfile nonumber nocursorline wrap linebreak
 
 		%d _
@@ -39,24 +44,28 @@ function atoum#run(file, bang, args)
 
 		execute 'silent! %!' . _ . ' ' . a:args . (g:atoum#debug ? ' --debug' : '')
 		execute 'resize ' . line('$')
-		execute 'setlocal statusline=' .  a:file
 		execute 'nnoremap <silent> <buffer> <CR> :call atoum#run(''' . a:file . ''', '''', ''' . a:args . ''')<CR>'
 		execute 'nnoremap <silent> <buffer> <LocalLeader>g :execute bufwinnr(' . bufnr . ') . ''wincmd w''<CR>'
 
 		nnoremap <silent> <buffer> <C-W>_ :execute 'resize ' . line('$')<CR>
 		nnoremap <silent> <buffer> <LocalLeader><CR> :call atoum#goToFailure(getline('.'))<CR>
 
+		let g:atoum#success = search('^Success ', 'w')
+		let g:atoum#status = g:atoum#success > 0 ? 'SUCCESS' : 'FAIL'
+
+		execute 'set titlestring=[' . g:atoum#status . ']\ ' . a:file
+
+		execute 'setlocal statusline=[' . g:atoum#status . ']\ %<' . fnameescape(a:file) . '\ %=[' . g:atoum#status . ']'
+
 		augroup atoum
 			au!
-			execute 'autocmd BufUnload <buffer> execute bufwinnr(' . bufnr . ') . ''wincmd w'''
-			execute 'autocmd BufEnter <buffer> execute ''resize '' .  line(''$'')'
-			execute 'autocmd BufEnter <buffer> execute ''setlocal statusline=' .  a:file . ''''
+			execute 'au BufUnload <buffer> execute bufwinnr(' . bufnr . ') . ''wincmd w'''
+			execute 'au BufEnter <buffer> execute ''resize '' .  line(''$'')'
+			execute 'au BufEnter <buffer> let b:oldtitlestring = &titlestring | execute ''set titlestring=[' . g:atoum#status . ']\ ' . a:file . ''''
 			au BufEnter <buffer> let g:atoum#cursorline = &cursorline | set nocursorline | call atoum#highlightStatusLine()
-			au BufLeave <buffer> if (g:atoum#cursorline) | set cursorline | endif
+			au BufLeave <buffer> execute 'set titlestring=' . fnameescape(b:oldtitlestring)
 			au BufWinLeave <buffer> au! atoum
 		augroup end
-
-		let g:atoum#success = search('^Success ', 'w')
 
 		if (g:atoum#success > 0)
 			execute g:atoum#success
