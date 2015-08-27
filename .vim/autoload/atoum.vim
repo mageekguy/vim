@@ -50,7 +50,7 @@ function atoum#run(file, bang, args)
 		nnoremap <silent> <buffer> <C-W>_ :execute 'resize ' . line('$')<CR>
 		nnoremap <silent> <buffer> <LocalLeader><CR> :call atoum#goToFailure(getline('.'))<CR>
 
-		let g:atoum#success = search('^Success ', 'w')
+		let g:atoum#success = ! v:shell_error
 		let g:atoum#status = g:atoum#success > 0 ? 'SUCCESS' : 'FAIL'
 
 		execute 'set titlestring=[' . g:atoum#status . ']\ ' . a:file

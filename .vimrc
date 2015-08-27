@@ -88,16 +88,10 @@ colorscheme solarized
 
 syntax on
 
-let mapleader = ','
+let mapleader = "\<Space>"
 let maplocalleader = ','
 
 filetype plugin on
-
-noremap! "" ""<left>
-noremap! '' ''<left>
-noremap! (( ()<left>
-noremap! [[ []<left>
-noremap! {{ {<CR>}<CR><Esc><up><up>o
 
 nnoremap <silent> <C-Up> <C-W>W
 nnoremap <silent> <C-Left> <C-W>h
@@ -215,5 +209,18 @@ augroup vimrc
 
 	execute 'au BufWritePost .vimrc source %'
 augroup end
+
+vmap <Leader>y "+y
+vmap <Leader>d "+d
+nmap <Leader>p "+p
+nmap <Leader>P "+P
+vmap <Leader>p "+p
+vmap <Leader>P "+P
+nmap <Leader><Leader> V
+
+nnoremap <Leader>w :w<CR>
+nnoremap <Leader>q :q<CR>
+nnoremap <Leader>s :wq<CR>
+nnoremap <Leader>v V
 
 runtime! plugin/**/*.vim
