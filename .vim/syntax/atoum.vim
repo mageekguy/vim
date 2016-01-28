@@ -166,10 +166,10 @@ if !exists('b:current_syntax')
 	highlight default atoumOutputPrompt guifg=Gray ctermfg=Gray
 
 	syntax match atoumSuccess '^Success ([^)]\+)!'
-	highlight default atoumSuccess term=bold cterm=bold guifg=White guibg=DarkGreen ctermfg=White ctermbg=DarkGreen
+	highlight default atoumSuccess term=bold cterm=bold guifg=White ctermfg=White
 
 	syntax match atoumFailure '^Failure ([^)]\+)!'
-	highlight default atoumFailure term=bold cterm=bold guifg=White guibg=DarkRed ctermfg=White ctermbg=DarkRed
+	highlight default atoumFailure term=bold cterm=bold guifg=White ctermfg=White
 
 	syntax match diffRemoved	"^-.*"
 	syntax match diffAdded	"^+.*"

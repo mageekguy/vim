@@ -2,31 +2,40 @@
 " Author:					Frédéric Hardy - http://blog.mageekbox.net
 " Licence:					GPL version 2.0 license
 "=============================================================================
-set nocompatible
 set autoindent
 set autoread
-set linebreak
-set cindent
+set background=dark
 set backspace=indent,eol,start
+set backup
+set backupdir=~/.vimbackup
+set cindent
 set cmdheight=1
 set completeopt=longest,menuone
+set copyindent
 set cursorline
-set nocursorcolumn
 set encoding=utf-8
 set fileencoding=utf-8
 set fileformats=unix,mac,dos
-set fillchars=vert:\ 
 set fillchars=fold:\ 
+set fillchars=vert:\ 
 set foldclose=
 set foldmethod=syntax
+set gdefault
 set hlsearch
+set ignorecase
+set incsearch
 set laststatus=2
+set lazyredraw
 set lcs=tab:\|\ ,trail:-,precedes:<,extends:>
+set linebreak
 set list
-set backup
-set backupdir=~/.vimbackup
-set noexpandtab
 set modeline
+set nocompatible
+set nocursorcolumn
+set noequalalways
+set noerrorbells
+set noexpandtab
+set nojoinspaces
 set noswapfile
 set nowrap
 set nrformats=octal,hex,alpha
@@ -34,6 +43,8 @@ set number
 set ruler
 set scrolljump=1
 set scrolloff=5
+set selection=inclusive
+set shiftround
 set shiftwidth=3
 set showcmd
 set showmatch
@@ -41,35 +52,26 @@ set showmode
 set showtabline=1
 set sidescroll=1
 set sidescrolloff=5
-set gdefault
-set incsearch
-set ignorecase
-set wildignorecase
 set smartcase
 set smarttab
-set statusline=%<%w%f\ %=%y[%{&ff}][%{(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\")}][%6c][%{printf('%'.strlen(line('$')).'s',line('.'))}/%L][%3p%%]%{'['.(&readonly?'RO':'\ \ ').']'}%{'['.(&modified?'+':'-').']'}
+set splitbelow
+set splitright
+set statusline=[%n][%{len(filter(range(1,bufnr('$')),'buflisted(v:val)'))}][%w%f]%=%y[%{&ff}][%{(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\")}][%6c][%{printf('%'.strlen(line('$')).'s',line('.'))}/%L][%3p%%]%{'['.(&readonly?'RO':'\ \ ').']'}%{'['.(&modified?'+':'-').']'}
 set switchbuf=useopen
 set synmaxcol=1000
 set tabstop=3
 set title
 set ttyfast
-set lazyredraw
+set vb t_vb=
 set viminfo='20,\"50,:20,%,n~/.viminfo
-set wildmenu
-set wildmode=longest:full
+set whichwrap=<,>,h,l,[,]
 set wildchar=<Tab>
 set wildcharm=<C-Z>
+set wildignorecase
+set wildmenu
+set wildmode=longest:full
 set winminheight=0
 set winminwidth=0
-set whichwrap=<,>,h,l,[,]
-set noerrorbells
-set vb t_vb=
-set selection=inclusive
-set splitbelow
-set splitright
-set noequalalways
-set nojoinspaces
-set background=dark
 
 if v:version >= 703
 	set undofile
@@ -79,8 +81,6 @@ if v:version >= 703
 	nnoremap <silent> <F2> :execute 'set ' . (&relativenumber ? 'norelativenumber' : 'relativenumber')<CR>
 endif
 
-let &t_Co=256
-let g:solarized_termcolors=256
 let g:solarized_underline=0
 let g:solarized_visibility="low"
 
@@ -104,12 +104,24 @@ nnoremap <silent> <C-S-Enter> <C-W>_
 nnoremap <silent> <C-PageDown> zj
 nnoremap <silent> <C-PageUp> zk
 nnoremap <silent> <Space>  za
-nnoremap <silent> <expr> <leader>p '`[' . strpart(getregtype(), 0, 1) . '`]'
+nnoremap <silent> <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
 nnoremap <silent> . .`[
 nnoremap <silent> <F11> :Shell!<CR>
 nnoremap <silent> gf :sp <cfile><CR>
 nnoremap * *N
 nnoremap # #N
+
+function! s:RenameTo(newName)
+    let currentName = expand('%')
+    if a:newName != '' && a:newName != currentName
+        exec ':saveas ' . a:newName
+        exec ':silent !rm ' . currentName
+        redraw!
+    endif
+endfunction
+
+command! -complete=file -nargs=1 RenameTo call s:RenameTo(<q-args>)
+cabbrev <expr> RenameTo 'RenameTo ' . expand('%')
 
 function! s:SkipWhiteLine(direction)
 	execute 'normal ' . a:direction
@@ -127,6 +139,8 @@ vnoremap < <gv
 vnoremap > >gv
 vnoremap / <Esc>/\%V\%V<Left><Left><Left>
 vnoremap ? <Esc>?\%V\%V<Left><Left><Left>
+
+au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
 
 inoremap <expr> <Space> pumvisible() ? "\<C-y><Space>" :"\<C-g>u\<Space>"
 inoremap <expr> <Right> pumvisible() ? "\<C-y>" :"\<C-g>u\<Right>"
@@ -183,9 +197,11 @@ function! s:GitPrevious()
 	execute ':silent! set readonly'
 	execute ':silent! set ft=' . filetype
 	setlocal buftype=nowrite bufhidden=wipe nobuflisted noswapfile
-endfunction
 
+endfunction
 command! -nargs=0 GitPrevious call s:GitPrevious()
+
+nnoremap <silent> <LocalLeader>s :sp %:s?tests/units/??<CR>
 
 call atoum#defineConfiguration('/Users/fch/Atoum/repository', '/Users/fch/Atoum/repository/.atoum.vim.php', '.php')
 
@@ -193,7 +209,7 @@ augroup vimrc
 	au!
 
 	" Color in active status line
-	au BufWinEnter,WinEnter * hi statusline guibg=Cyan guifg=Black gui=NONE
+	au BufWinEnter,WinEnter * hi statusline guibg=#268bd2 guifg=#eee8d5 gui=NONE
 
 	au WinEnter * hi wildmenu guibg=DarkGreen gui=NONE
 	au WinEnter * set cursorline nocursorcolumn
@@ -206,6 +222,9 @@ augroup vimrc
 
 	au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute "normal! g'\"" | endif
 	au WinLeave * set nocursorline nocursorcolumn
+
+	au BufEnter * sign define dummy
+	au BufEnter * execute 'sign place 9999 line=1 name=dummy buffer=' . bufnr('')
 
 	execute 'au BufWritePost .vimrc source %'
 augroup end
@@ -222,5 +241,6 @@ nnoremap <Leader>w :w<CR>
 nnoremap <Leader>q :q<CR>
 nnoremap <Leader>s :wq<CR>
 nnoremap <Leader>v V
+nnoremap <S-n> ~
 
 runtime! plugin/**/*.vim

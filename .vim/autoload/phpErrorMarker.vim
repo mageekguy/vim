@@ -26,19 +26,16 @@ if !exists('g:phpErrorMarker#errorformat')
 endif
 
 if !exists('g:phpErrorMarker#textError')
-	let g:phpErrorMarker#textError = '!!'
+	let g:phpErrorMarker#textError = '⚠︎'
 endif
 
 if !exists('g:phpErrorMarker#textWarning')
-	let phpErrorMarker#textWarning = '!'
+	let phpErrorMarker#textWarning = '⚡︎'
 endif
 
-highlight default phpErrorMarkerWarning guifg=LightRed ctermfg=lightRed term=underline cterm=underline gui=underline
-highlight default phpErrorMarkerError guifg=Red ctermfg=Red term=underline cterm=underline gui=underline
-
 if has('signs')
-	execute 'sign define phpErrorMarkerError text=' . g:phpErrorMarker#textError . ' linehl=phpErrorMarkerError texthl=phpErrorMarkerError'
-	execute 'sign define phpErrorMarkerWarning text=' . g:phpErrorMarker#textWarning . ' linehl=phpErrorMarkerWarning texthl=phpErrorMarkerWarning'
+	execute 'sign define phpErrorMarkerError text=' . g:phpErrorMarker#textError . ' linehl=ErrorMsg'
+	execute 'sign define phpErrorMarkerWarning text=' . g:phpErrorMarker#textWarning . ' linehl=WarningMsg'
 endif
 
 "automake {{{1

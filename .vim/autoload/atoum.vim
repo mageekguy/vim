@@ -12,6 +12,9 @@ endif
 if !exists('g:atoum#_')
 	let g:atoum#_ = ''
 endif
+if !exists('g:atoum#unitTestDirectory')
+	let g:atoum#unitTestDirectory = 'tests/units/'
+endif
 "run {{{1
 function atoum#run(file, bang, args)
 	let _ = a:bang != '' ? g:atoum#_ : g:atoum#php . ' -f ' . a:file . ' -- -c ' . g:atoum#configuration
@@ -50,12 +53,14 @@ function atoum#run(file, bang, args)
 		nnoremap <silent> <buffer> <C-W>_ :execute 'resize ' . line('$')<CR>
 		nnoremap <silent> <buffer> <LocalLeader><CR> :call atoum#goToFailure(getline('.'))<CR>
 
+		execute 'nnoremap <silent> <buffer> <LocalLeader>s :execute ''sp ' . substitute(fnameescape(a:file), g:atoum#unitTestDirectory, '', '') . '''<CR>'
+
 		let g:atoum#success = ! v:shell_error
 		let g:atoum#status = g:atoum#success > 0 ? 'SUCCESS' : 'FAIL'
 
 		execute 'set titlestring=[' . g:atoum#status . ']\ ' . a:file
 
-		execute 'setlocal statusline=[' . g:atoum#status . ']\ %<' . fnameescape(a:file) . '\ %=[' . g:atoum#status . ']'
+		execute 'setlocal statusline=%<' . fnameescape(a:file)
 
 		augroup atoum
 			au!
@@ -150,9 +155,9 @@ endfunction
 "highlightStatusLine {{{1
 function atoum#highlightStatusLine()
 	if g:atoum#success
-		hi statusline guibg=DarkGreen guifg=White gui=NONE
+		hi statusline guibg=#859900 guifg=#eee8d5 gui=NONE
 	else
-		hi statusline guibg=DarkRed guifg=White gui=NONE
+		hi statusline guibg=#dc322f guifg=#eee8d5 gui=NONE
 	endif
 endfunction
 "displayError {{{1

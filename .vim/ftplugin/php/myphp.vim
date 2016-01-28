@@ -62,12 +62,26 @@ function! s:cleanFile()
 endfunction
 
 function! s:selectFunctionInVisualMode()
-	let currentWord =  '\\$' . expand('<cword>')
 	execute 'keepjumps ?function'
 	execute 'keepjumps /{'
 	execute 'keepjumps normal vi{'
-	echomsg 'normal! /\\%V' . currentWord . '\\%V'
-	execute 'normal! /\\%V' . currentWord . '\\%V'
+endfunction
+
+let s:oldKeyword = ''
+
+function! s:highlightVariable()
+
+	if (! (getline('.')[col('.')-1] =~# '\k'))
+		let s:oldKeyword = ''
+		match none
+	else
+		let currentWord = expand('<cword>')
+
+		if (s:oldKeyword != currentWord)
+			let s:oldKeyword = currentWord
+			execute printf('match IncSearch /\$\<%s\>/', escape(currentWord, '/\'))
+		endif
+	endif
 endfunction
 
 augroup myphp
@@ -75,6 +89,7 @@ augroup myphp
 	au! InsertLeave,WinLeave <buffer> if exists('w:lastFoldMethod') | let &l:foldmethod=w:lastFoldMethod | unlet w:lastFoldMethod | endif
 	au! BufRead,BufWrite <buffer> call <SID>cleanFile()
 	au! BufEnter <buffer> setlocal foldtext=MyPhpFoldText()
+	au! CursorMoved <buffer> call <SID>highlightVariable()
 augroup end
 
 " vim:filetype=vim foldmethod=marker shiftwidth=3 tabstop=3
