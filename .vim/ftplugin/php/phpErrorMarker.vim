@@ -15,7 +15,9 @@ if (!exists('phpErrorMarker#disable') || phpErrorMarker#disable <= 0) && !exists
 		let s:cpo = &cpo
 		setlocal cpo&vim
 
-		let &makeprg = g:phpErrorMarker#php . ' -nl %'
+		call phpErrorMarker#configure()
+
+		let &makeprg = g:phpErrorMarker#php
 		let &errorformat = g:phpErrorMarker#errorformat
 
 		augroup phpErrorMarker

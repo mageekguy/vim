@@ -21,6 +21,10 @@ if !exists('g:phpErrorMarker#php')
 	let g:phpErrorMarker#php = 'php'
 endif
 
+if !exists('g:phpErrorMarker#filter')
+	let g:phpErrorMarker#filter = ''
+endif
+
 if !exists('g:phpErrorMarker#errorformat')
 	let g:phpErrorMarker#errorformat = '%A,%C%s:\ %m\ in\ %f\ on\ line\ %l,%Z%s'
 endif
@@ -45,6 +49,10 @@ function phpErrorMarker#automake()
 
 		silent! make
 
+		if !exists('b:phpErrorMarker_counter')
+			let b:phpErrorMarker_counter = 0
+		endif
+
 		if b:phpErrorMarker_counter <= 0
 			execute 'normal ``'
 		endif
@@ -55,6 +63,16 @@ function phpErrorMarker#autowrite()
 	if g:phpErrorMarker#autowrite && &modified
 		w
 	endif
+endfunction
+function phpErrorMarker#configure()
+	let g:phpErrorMarker#php = g:phpErrorMarker#php . ' -nl %'
+
+	if g:phpErrorMarker#filter != ''
+		let g:phpErrorMarker#php = g:phpErrorMarker#php . ' \| ' . g:phpErrorMarker#filter
+	endif
+
+	let &makeprg = g:phpErrorMarker#php
+	let &errorformat = g:phpErrorMarker#errorformat
 endfunction
 "markErrors {{{1
 function phpErrorMarker#markErrors()
@@ -85,7 +103,7 @@ function phpErrorMarker#markErrors()
 			normal! zv
 
 			if g:phpErrorMarker#openQuickfix
-				cw
+				copen
 			endif
 		endif
 	endif
