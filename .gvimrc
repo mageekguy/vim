@@ -16,8 +16,11 @@ set vb t_vb=
 if has("gui_macvim")
 	set fuopt+=maxhorz
 	set fuopt+=maxvert
-	set guifont=Monaco:h11
-	let macvim_skip_cmd_opt_movement=1
+"	set guifont=Monaco:h11
+	nmap <silent> <C-S-Right> :maca _cycleWindowsBackwards:<CR> 
+	nmap <silent> <C-S-Left> :maca _cycleWindows:<CR>
+	set macligatures
+	set guifont=Fira\ Code:h11
 endif
 
 augroup fch
