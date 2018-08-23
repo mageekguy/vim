@@ -30,7 +30,7 @@ if !exists('g:phpErrorMarker#errorformat')
 endif
 
 if !exists('g:phpErrorMarker#textError')
-	let g:phpErrorMarker#textError = '⚠︎'
+	let g:phpErrorMarker#textError = '💩'
 endif
 
 if !exists('g:phpErrorMarker#textWarning')
