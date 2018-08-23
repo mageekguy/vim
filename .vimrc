@@ -2,6 +2,8 @@
 " Author:					Frédéric Hardy - http://blog.mageekbox.net
 " Licence:					GPL version 2.0 license
 "=============================================================================
+set exrc
+set secure
 set autoindent
 set autoread
 set background=dark
@@ -10,7 +12,7 @@ set backup
 set backupdir=~/.vimbackup
 set cindent
 set cmdheight=1
-set completeopt=longest,menuone
+set completeopt=menuone
 set copyindent
 set cursorline
 set encoding=utf-8
@@ -26,7 +28,7 @@ set ignorecase
 set incsearch
 set laststatus=2
 set lazyredraw
-set lcs=tab:\|\ ,trail:-,precedes:<,extends:>
+set lcs=tab:\│\ ,trail:-,precedes:<,extends:>,nbsp:↓
 set linebreak
 set list
 set modeline
@@ -56,7 +58,16 @@ set smartcase
 set smarttab
 set splitbelow
 set splitright
-set statusline=[%n][%{len(filter(range(1,bufnr('$')),'buflisted(v:val)'))}][%w%f]%=%y[%{&ff}][%{(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\")}][%6c][%{printf('%'.strlen(line('$')).'s',line('.'))}/%L][%3p%%]%{'['.(&readonly?'RO':'\ \ ').']'}%{'['.(&modified?'+':'-').']'}
+set statusline=%3n
+set statusline+=\│%-4{&ff}
+set statusline+=\│%-7{(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\")}
+set statusline+=\│%-7{&filetype}
+set statusline+=\│%{(!&modifiable?'○':(&modified>0?'●':'\ '))}
+set statusline+=\│%w%f
+set statusline+=%=
+set statusline+=\│%6c
+set statusline+=\│%6{printf('%s',line('.'))}/%-6L
+set statusline+=\│%3p%%
 set switchbuf=useopen
 set synmaxcol=1000
 set tabstop=3
@@ -72,6 +83,12 @@ set wildmenu
 set wildmode=longest:full
 set winminheight=0
 set winminwidth=0
+set t_Co=256
+set grepprg=grep\ -rin\ $*\ /dev/null
+set clipboard+=unnamed
+set nojoinspaces
+set guicursor=i-ci:hor25-Cursor-blinkwait300-blinkon200-blinkoff150
+set regexpengine=2
 
 if v:version >= 703
 	set undofile
@@ -82,7 +99,7 @@ if v:version >= 703
 endif
 
 let g:solarized_underline=0
-let g:solarized_visibility="low"
+let g:solarized_visibility="normal"
 
 colorscheme solarized
 
@@ -93,23 +110,29 @@ let maplocalleader = ','
 
 filetype plugin on
 
-nnoremap <silent> <C-Up> <C-W>W
-nnoremap <silent> <C-Left> <C-W>h
-nnoremap <silent> <C-Down> <C-W>w
-nnoremap <silent> <C-Right> <C-W>l
 nnoremap <silent> <C-S-Up> <C-W>k\|:execute 'resize ' . line('$')<CR>
 nnoremap <silent> <C-S-Down> <C-W>j\|:execute 'resize ' . line('$')<CR>
 nnoremap <silent> <Tab> <C-W>x\|:execute 'resize ' . line('$')<CR>
 nnoremap <silent> <C-S-Enter> <C-W>_
-nnoremap <silent> <C-PageDown> zj
-nnoremap <silent> <C-PageUp> zk
-nnoremap <silent> <Space>  za
 nnoremap <silent> <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
 nnoremap <silent> . .`[
 nnoremap <silent> <F11> :Shell!<CR>
 nnoremap <silent> gf :sp <cfile><CR>
 nnoremap * *N
 nnoremap # #N
+
+function! TabCompletion()
+	return col('.')>1 && strpart( getline('.'), col('.')-2, 3 ) =~ '^\w' ? "\<C-N>" : "\<Tab>"
+endfunction
+
+inoremap <C-Tab> <C-R>=TabCompletion()<CR>
+
+function! s:Only(file)
+	exec ':only'
+	exec ':e ' . a:file
+endfunction
+
+command! -complete=file -nargs=1 Only call s:Only(<q-args>)
 
 function! s:RenameTo(newName)
     let currentName = expand('%')
@@ -142,14 +165,10 @@ vnoremap ? <Esc>?\%V\%V<Left><Left><Left>
 
 au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
 
-inoremap <expr> <Space> pumvisible() ? "\<C-y><Space>" :"\<C-g>u\<Space>"
-inoremap <expr> <Right> pumvisible() ? "\<C-y>" :"\<C-g>u\<Right>"
-inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-inoremap <expr> <C-n> pumvisible() ? '<C-n>' : '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
-inoremap <expr> <M-,> pumvisible() ? '<C-n>' : '<C-x><C-o><C-n><C-p><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
-inoremap <expr> <C-Tab> pumvisible() ? "<Down>" : '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
-
-inoremap <C-S-Tab> <C-X><C-O>
+inoremap <expr> <C-Tab> pumvisible() ? "<Down>" : '<C-n>'
+inoremap <expr> <M-Tab> pumvisible() ? "<Down>" : '<C-X><C-L>'
+inoremap <expr> <BS> pumvisible() ? "<C-e>" : '<BS>'
+nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
 
 let g:phpErrorMarker#autowrite = 1
 let g:phpErrorMarker#automake = 1
@@ -201,8 +220,6 @@ function! s:GitPrevious()
 endfunction
 command! -nargs=0 GitPrevious call s:GitPrevious()
 
-nnoremap <silent> <LocalLeader>s :sp %:s?tests/units/??<CR>
-
 call atoum#defineConfiguration('/Users/fch/Atoum/repository', '/Users/fch/Atoum/repository/.atoum.vim.php', '.php')
 
 augroup vimrc
@@ -244,3 +261,4 @@ nnoremap <Leader>v V
 nnoremap <S-n> ~
 
 runtime! plugin/**/*.vim
+
