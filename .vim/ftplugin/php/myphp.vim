@@ -121,108 +121,6 @@ function! s:risingsun(path)
 	endif
 endfunction
 
-function! s:roman(path)
-	if (getcwd() == $HOME . '/roman')
-		if (match(a:path, 'tests/units/src/.*') >= 0 && line('$') == 1 && getline(1) == '')
-			let tld = substitute(substitute(fnamemodify(a:path, ':h'), 'tests/units/src', '', ''), '/', '\', 'g')
-			let splitedTld = split(tld, '\')
-
-			call append(0, '<?php namespace estvoyage\roman\tests\units' . tld . ';')
-			call append(1, '')
-			call append(2, 'require __DIR__ . ''/' . repeat('../', (len(splitedTld)) + 1) . 'runner.php'';')
-			call append(3, '')
-			call append(4, 'use estvoyage\roman\tests\units;')
-			call append(5, '')
-			call append(6, 'class ' . fnamemodify(a:path, ':t:r') . ' extends units\test')
-			call append(7, '{')
-			call append(8, '}')
-			:$d
-			:$
-			normal zo
-			normal O
-		elseif (match(a:path, 'src/.*') >= 0 && line('$') == 1 && getline(1) == '')
-			let tld = substitute(substitute(fnamemodify(a:path, ':h'), 'src', '', ''), '/', '\', 'g')
-			call append(0, '<?php namespace estvoyage\roman' . tld . ';')
-			call append(1, '')
-			call append(2, 'class ' . fnamemodify(a:path, ':t:r'))
-			call append(3, '{')
-			call append(4, '}')
-			:$d
-			:$
-			normal zo
-			normal O
-		endif
-	endif
-endfunction
-
-function! s:tictactoe(path)
-	if (getcwd() == $HOME . '/ticTacToe')
-		if (match(a:path, 'tests/units/src/.*') >= 0 && line('$') == 1 && getline(1) == '')
-			let tld = substitute(substitute(fnamemodify(a:path, ':h'), 'tests/units/src', '', ''), '/', '\', 'g')
-			let splitedTld = split(tld, '\')
-
-			call append(0, '<?php namespace estvoyage\ticTacToe\tests\units' . tld . ';')
-			call append(1, '')
-			call append(2, 'require __DIR__ . ''/' . repeat('../', (len(splitedTld)) + 1) . 'runner.php'';')
-			call append(3, '')
-			call append(4, 'use estvoyage\ticTacToe\tests\units;')
-			call append(5, '')
-			call append(6, 'class ' . fnamemodify(a:path, ':t:r') . ' extends units\test')
-			call append(7, '{')
-			call append(8, '}')
-			:$d
-			:$
-			normal zo
-			normal O
-		elseif (match(a:path, 'src/.*') >= 0 && line('$') == 1 && getline(1) == '')
-			let tld = substitute(substitute(fnamemodify(a:path, ':h'), 'src', '', ''), '/', '\', 'g')
-			call append(0, '<?php namespace estvoyage\ticTacToe' . tld . ';')
-			call append(1, '')
-			call append(2, 'class ' . fnamemodify(a:path, ':t:r'))
-			call append(3, '{')
-			call append(4, '}')
-			:$d
-			:$
-			normal zo
-			normal O
-		endif
-	endif
-endfunction
-
-function! s:tdd(path)
-	if (getcwd() == $HOME . '/Norsys/tdd')
-		if (match(a:path, 'tests/units/src/.*') >= 0 && line('$') == 1 && getline(1) == '')
-			let tld = substitute(substitute(fnamemodify(a:path, ':h'), 'tests/units/src', '', ''), '/', '\', 'g')
-			let splitedTld = split(tld, '\')
-
-			call append(0, '<?php namespace norsys\tdd\tests\units' . tld . ';')
-			call append(1, '')
-			call append(2, 'require __DIR__ . ''/' . repeat('../', (len(splitedTld)) + 1) . 'runner.php'';')
-			call append(3, '')
-			call append(4, 'use norsys\tdd\tests\units;')
-			call append(5, '')
-			call append(6, 'class ' . fnamemodify(a:path, ':t:r') . ' extends units\test')
-			call append(7, '{')
-			call append(8, '}')
-			:$d
-			:$
-			normal zo
-			normal O
-		elseif (match(a:path, 'src/.*') >= 0 && line('$') == 1 && getline(1) == '')
-			let tld = substitute(substitute(fnamemodify(a:path, ':h'), 'src', '', ''), '/', '\', 'g')
-			call append(0, '<?php namespace norsys\tdd' . tld . ';')
-			call append(1, '')
-			call append(2, 'class ' . fnamemodify(a:path, ':t:r'))
-			call append(3, '{')
-			call append(4, '}')
-			:$d
-			:$
-			normal zo
-			normal O
-		endif
-	endif
-endfunction
-
 function! s:composerScore(path)
 	if (getcwd() == $HOME . '/Norsys/Composer/Score')
 		if (match(a:path, 'tests/units/src/.*') >= 0 && line('$') == 1 && getline(1) == '')
@@ -257,51 +155,12 @@ function! s:composerScore(path)
 	endif
 endfunction
 
-function! s:demoTdd(path)
-	if (getcwd() == $HOME . '/Norsys/Formations/demo/tdd')
-		if (match(a:path, 'tests/units/src/.*') >= 0 && line('$') == 1 && getline(1) == '')
-			let tld = substitute(substitute(fnamemodify(a:path, ':h'), 'tests/units/src', '', ''), '/', '\', 'g')
-			let splitedTld = split(tld, '\')
-
-			call append(0, '<?php namespace devarena\tests\units' . tld . ';')
-			call append(1, '')
-			call append(2, 'require __DIR__ . ''/' . repeat('../', (len(splitedTld)) + 1) . 'runner.php'';')
-			call append(3, '')
-			call append(4, 'use devarena\tests\units;')
-			call append(5, '')
-			call append(6, 'class ' . fnamemodify(a:path, ':t:r') . ' extends units\test')
-			call append(7, '{')
-			call append(8, '}')
-			:$d
-			:$
-			normal zo
-			normal O
-		elseif (match(a:path, 'src/.*') >= 0 && line('$') == 1 && getline(1) == '')
-			let tld = substitute(substitute(fnamemodify(a:path, ':h'), 'src', '', ''), '/', '\', 'g')
-			call append(0, '<?php namespace devarena' . tld . ';')
-			call append(1, '')
-			call append(2, 'class ' . fnamemodify(a:path, ':t:r'))
-			call append(3, '{')
-			call append(4, '}')
-			:$d
-			:$
-			normal zo
-			normal O
-		endif
-	endif
-endfunction
-
 augroup myphp
 	au! InsertEnter <buffer> if !exists('w:lastFoldMethod') | let w:lastFoldMethod=&foldmethod | setlocal foldmethod=manual | endif
 	au! InsertLeave,WinLeave <buffer> if exists('w:lastFoldMethod') | let &l:foldmethod=w:lastFoldMethod | unlet w:lastFoldMethod | endif
 	au! BufRead,BufWrite <buffer> call <SID>cleanFile()
 	au! BufEnter <buffer> setlocal foldtext=MyPhpFoldText()
 	au BufEnter <buffer> call <SID>risingsun(expand('<afile>'))
-	au BufEnter <buffer> call <SID>roman(expand('<afile>'))
-	au BufEnter <buffer> call <SID>tictactoe(expand('<afile>'))
-	au BufEnter <buffer> call <SID>tdd(expand('<afile>'))
-	au BufEnter <buffer> call <SID>composerScore(expand('<afile>'))
-	au BufEnter <buffer> call <SID>demoTdd(expand('<afile>'))
 	au! CursorMoved <buffer> call <SID>highlightVariable()
 augroup end
 

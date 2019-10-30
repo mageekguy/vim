@@ -20,7 +20,15 @@ if has("gui_macvim")
 	nmap <silent> <C-S-Right> :maca _cycleWindowsBackwards:<CR> 
 	nmap <silent> <C-S-Left> :maca _cycleWindows:<CR>
 	set macligatures
-	set guifont=Fira\ Code:h11
+	set guifont=Fira\ Code:h12
+	aunmenu TouchBar
+	an TouchBar.-space1- <Nop> 
+	an icon=NSTouchBarSidebarTemplate TouchBar.Explorer :Lexplore<CR>
+	nmenu icon=NSTouchBarGoDownTemplate TouchBar.Down <C-S-Down>
+	nmenu icon=NSTouchBarGoUpTemplate TouchBar.Up <C-S-Up>
+	an icon=NSTouchBarHistoryTemplate TouchBar.Previous :GitPrevious<CR>
+	an icon=NSTouchBarRefreshTemplate TouchBar.Diff :GitDiff<CR>
+
 endif
 
 augroup fch

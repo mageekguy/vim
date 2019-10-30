@@ -2,6 +2,16 @@
 " Author:					Frédéric Hardy - http://blog.mageekbox.net
 " Licence:					GPL version 2.0 license
 "=============================================================================
+function! StatuslineGit(path)
+  let b:GitBranch = system("git -C " . a:path . " rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
+  let b:GitBranch = strlen(b:GitBranch) > 0 ? '|' . b:GitBranch : ''
+endfunction
+
+augroup GitBranch
+  autocmd!
+  autocmd CursorHold,BufEnter,BufNewFile,BufReadPost * call g:StatuslineGit(expand('%:h'))
+augroup END
+
 set exrc
 set secure
 set autoindent
@@ -28,9 +38,9 @@ set ignorecase
 set incsearch
 set laststatus=2
 set lazyredraw
-set lcs=tab:\│\ ,trail:-,precedes:<,extends:>,nbsp:↓
-set linebreak
 set list
+set listchars=tab:\│\ ,trail:-,precedes:<,extends:>,nbsp:↓
+set linebreak
 set modeline
 set nocompatible
 set nocursorcolumn
@@ -43,7 +53,7 @@ set nowrap
 set nrformats=octal,hex,alpha
 set number
 set ruler
-set scrolljump=1
+set scrolljump=-100
 set scrolloff=5
 set selection=inclusive
 set shiftround
@@ -63,11 +73,12 @@ set statusline+=\│%-4{&ff}
 set statusline+=\│%-7{(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\")}
 set statusline+=\│%-7{&filetype}
 set statusline+=\│%{(!&modifiable?'○':(&modified>0?'●':'\ '))}
+set statusline+=%{printf('%s',exists(\"b:GitBranch\")?b:GitBranch:\'\')}
 set statusline+=\│%w%f
 set statusline+=%=
 set statusline+=\│%6c
 set statusline+=\│%6{printf('%s',line('.'))}/%-6L
-set statusline+=\│%3p%%
+set statusline+=\│%3p%%\ 
 set switchbuf=useopen
 set synmaxcol=1000
 set tabstop=3
@@ -206,21 +217,38 @@ command! -complete=shellcmd -nargs=* -bang Shell call s:ExecuteInShell(<q-args>,
 cabbrev shell Shell
 
 function! s:GitPrevious()
-	let _ = './' . expand('%')
+	let directory = fnamemodify(resolve(expand('%')), ':h')
+	let file = fnamemodify(resolve(expand('%')), ':t')
 	let filetype = &filetype
 
 	execute ':silent! vsp ' . tempname()
-	execute ':silent! 0r !git show HEAD~1:' . _
+	execute ':silent! set modifiable'
+	execute ':0r !git -C ' . directory . ' HEAD~1:./' . file
 	execute ':silent! $d'
 	execute ':silent! set nomodifiable'
 	execute ':silent! set readonly'
 	execute ':silent! set ft=' . filetype
 	setlocal buftype=nowrite bufhidden=wipe nobuflisted noswapfile
-
 endfunction
+
 command! -nargs=0 GitPrevious call s:GitPrevious()
 
-call atoum#defineConfiguration('/Users/fch/Atoum/repository', '/Users/fch/Atoum/repository/.atoum.vim.php', '.php')
+function! s:GitDiff()
+	let directory = fnamemodify(resolve(expand('%')), ':h')
+	let file = fnamemodify(resolve(expand('%')), ':t')
+	let filetype = &filetype
+
+	execute ':silent! vertical diffs ' . tempname()
+	execute ':silent! set modifiable'
+	execute ':0r !git -C ' . directory . ' diff HEAD~1 ./' . file
+	execute ':silent! $d'
+	execute ':silent! set nomodifiable'
+	execute ':silent! set readonly'
+	execute ':silent! set ft=' . filetype
+	setlocal buftype=nowrite bufhidden=wipe nobuflisted noswapfile
+endfunction
+
+command! -nargs=0 GitDiff call s:GitDiff()
 
 augroup vimrc
 	au!
@@ -261,4 +289,3 @@ nnoremap <Leader>v V
 nnoremap <S-n> ~
 
 runtime! plugin/**/*.vim
-
