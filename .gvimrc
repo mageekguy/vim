@@ -28,7 +28,8 @@ if has("gui_macvim")
 	nmenu icon=NSTouchBarGoUpTemplate TouchBar.Up <C-S-Up>
 	an icon=NSTouchBarHistoryTemplate TouchBar.Previous :GitPrevious<CR>
 	an icon=NSTouchBarRefreshTemplate TouchBar.Diff :GitDiff<CR>
-
+else
+	set guioptions+=m
 endif
 
 augroup fch
