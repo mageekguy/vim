@@ -74,12 +74,13 @@ set statusline+=\│%-7{(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)
 set statusline+=\│%-7{&filetype}
 set statusline+=\│%{(!&modifiable?'○':(&modified>0?'●':'\ '))}
 set statusline+=%{printf('%s',exists(\"b:GitBranch\")?b:GitBranch:\'\')}
-set statusline+=\│%w%f
+set statusline+=\|%{coc#status()}\ 
+set statusline+=%w%f
 set statusline+=%=
 set statusline+=\│%6c
 set statusline+=\│%6{printf('%s',line('.'))}/%-6L
 set statusline+=\│%3p%%\ 
-set switchbuf=useopen
+set switchbuf=split
 set synmaxcol=1000
 set tabstop=3
 set title
@@ -95,11 +96,14 @@ set wildmode=longest:full
 set winminheight=0
 set winminwidth=0
 set t_Co=256
-set grepprg=grep\ -rin\ $*\ /dev/null
+set grepprg=grep\ -rin\ $*
 set clipboard+=unnamed
 set nojoinspaces
 set guicursor=i-ci:hor25-Cursor-blinkwait300-blinkon200-blinkoff150
 set regexpengine=2
+set termguicolors
+set updatetime=200
+
 
 if v:version >= 703
 	set undofile
@@ -121,22 +125,17 @@ let maplocalleader = ','
 
 filetype plugin on
 
-nnoremap <silent> <C-S-Up> <C-W>k\|:execute 'resize ' . line('$')<CR>
-nnoremap <silent> <C-S-Down> <C-W>j\|:execute 'resize ' . line('$')<CR>
-nnoremap <silent> <Tab> <C-W>x\|:execute 'resize ' . line('$')<CR>
+nnoremap <silent> <C-S-Left> <C-W>h<C-W>_
+nnoremap <silent> <C-S-Right> <C-W>l<C-W>_
+nnoremap <silent> <C-S-Up> <C-W>k<C-W>_
+nnoremap <silent> <C-S-Down> <C-W>j<C-W>_
+nnoremap <silent> <Tab> <C-W>x<C-W>_
 nnoremap <silent> <C-S-Enter> <C-W>_
 nnoremap <silent> <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
 nnoremap <silent> . .`[
-nnoremap <silent> <F11> :Shell!<CR>
 nnoremap <silent> gf :sp <cfile><CR>
 nnoremap * *N
 nnoremap # #N
-
-function! TabCompletion()
-	return col('.')>1 && strpart( getline('.'), col('.')-2, 3 ) =~ '^\w' ? "\<C-N>" : "\<Tab>"
-endfunction
-
-inoremap <C-Tab> <C-R>=TabCompletion()<CR>
 
 function! s:Only(file)
 	exec ':only'
@@ -176,10 +175,15 @@ vnoremap ? <Esc>?\%V\%V<Left><Left><Left>
 
 au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
 
-inoremap <expr> <C-Tab> pumvisible() ? "<Down>" : '<C-n>'
-inoremap <expr> <M-Tab> pumvisible() ? "<Down>" : '<C-X><C-L>'
-inoremap <expr> <BS> pumvisible() ? "<C-e>" : '<BS>'
-nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <Tab> pumvisible() ? "\<C-n>" : <SID>check_back_space() ? "\<Tab>" : coc#refresh()
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 let g:phpErrorMarker#autowrite = 1
 let g:phpErrorMarker#automake = 1
@@ -223,9 +227,8 @@ function! s:GitPrevious()
 
 	execute ':silent! vsp ' . tempname()
 	execute ':silent! set modifiable'
-	execute ':0r !git -C ' . directory . ' HEAD~1:./' . file
+	execute ':0r !git -C ' . directory . ' show HEAD~1:./' . file
 	execute ':silent! $d'
-	execute ':silent! set nomodifiable'
 	execute ':silent! set readonly'
 	execute ':silent! set ft=' . filetype
 	setlocal buftype=nowrite bufhidden=wipe nobuflisted noswapfile
@@ -242,7 +245,6 @@ function! s:GitDiff()
 	execute ':silent! set modifiable'
 	execute ':0r !git -C ' . directory . ' diff HEAD~1 ./' . file
 	execute ':silent! $d'
-	execute ':silent! set nomodifiable'
 	execute ':silent! set readonly'
 	execute ':silent! set ft=' . filetype
 	setlocal buftype=nowrite bufhidden=wipe nobuflisted noswapfile
@@ -289,3 +291,17 @@ nnoremap <Leader>v V
 nnoremap <S-n> ~
 
 runtime! plugin/**/*.vim
+
+let g:netrw_liststyle=3
+let g:netrw_preview   = 1
+let g:netrw_winsize   = 30
+
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+let g:echodoc#enable_at_startup=1

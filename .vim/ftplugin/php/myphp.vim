@@ -73,86 +73,12 @@ endfunction
 
 let s:oldKeyword = ''
 
+
 function! s:highlightVariable()
-	if (! (getline('.')[col('.')-1] =~# '\k'))
-		let s:oldKeyword = ''
-		match none
-	else
-		let currentWord = expand('<cword>')
-
-		if (s:oldKeyword != currentWord)
-			let s:oldKeyword = currentWord
-			execute printf('match IncSearch /\$\<%s\>/', escape(currentWord, '/\'))
-		endif
-	endif
-endfunction
-
-function! s:risingsun(path)
-	if (getcwd() == $HOME . '/Risingsun')
-		if (match(a:path, 'tests/units/src/.*') >= 0 && line('$') == 1 && getline(1) == '')
-			let tld = substitute(substitute(fnamemodify(a:path, ':h'), 'tests/units/src', '', ''), '/', '\', 'g')
-			let splitedTld = split(tld, '\')
-
-			call append(0, '<?php namespace estvoyage\risingsun\tests\units' . tld . ';')
-			call append(1, '')
-			call append(2, 'require __DIR__ . ''/' . repeat('../', (len(splitedTld)) + 1) . 'runner.php'';')
-			call append(3, '')
-			call append(4, 'use estvoyage\risingsun\tests\units;')
-			call append(5, '')
-			call append(6, 'class ' . fnamemodify(a:path, ':t:r') . ' extends units\test')
-			call append(7, '{')
-			call append(8, '}')
-			:$d
-			:$
-			normal zo
-			normal O
-		elseif (match(a:path, 'src/.*') >= 0 && line('$') == 1 && getline(1) == '')
-			let tld = substitute(substitute(fnamemodify(a:path, ':h'), 'src', '', ''), '/', '\', 'g')
-			call append(0, '<?php namespace estvoyage\risingsun' . tld . ';')
-			call append(1, '')
-			call append(2, 'class ' . fnamemodify(a:path, ':t:r'))
-			call append(3, '{')
-			call append(4, '}')
-			:$d
-			:$
-			normal zo
-			normal O
-		endif
-	endif
-endfunction
-
-function! s:composerScore(path)
-	if (getcwd() == $HOME . '/Norsys/Composer/Score')
-		if (match(a:path, 'tests/units/src/.*') >= 0 && line('$') == 1 && getline(1) == '')
-			let tld = substitute(substitute(fnamemodify(a:path, ':h'), 'tests/units/src', '', ''), '/', '\', 'g')
-			let splitedTld = split(tld, '\')
-
-			call append(0, '<?php namespace norsys\score\tests\units' . tld . ';')
-			call append(1, '')
-			call append(2, 'require __DIR__ . ''/' . repeat('../', (len(splitedTld)) + 1) . 'runner.php'';')
-			call append(3, '')
-			call append(4, 'use norsys\score\tests\units;')
-			call append(5, '')
-			call append(6, 'class ' . fnamemodify(a:path, ':t:r') . ' extends units\test')
-			call append(7, '{')
-			call append(8, '}')
-			:$d
-			:$
-			normal zo
-			normal O
-		elseif (match(a:path, 'src/.*') >= 0 && line('$') == 1 && getline(1) == '')
-			let tld = substitute(substitute(fnamemodify(a:path, ':h'), 'src', '', ''), '/', '\', 'g')
-			call append(0, '<?php namespace norsys\score' . tld . ';')
-			call append(1, '')
-			call append(2, 'class ' . fnamemodify(a:path, ':t:r'))
-			call append(3, '{')
-			call append(4, '}')
-			:$d
-			:$
-			normal zo
-			normal O
-		endif
-	endif
+	let cword = expand('<cword>')
+	let l:syntaxgroup = synIDattr(synIDtrans(synID(line('.'), stridx(getline('.'), l:cword) + 1, 1)), 'name')
+	let highlight = l:syntaxgroup != 'Identifier' ? '\V\<\>' :  printf('\$\<%s\>', escape(l:cword, '/\'))
+	exe 'match IncSearch /' . l:highlight . '/'
 endfunction
 
 augroup myphp
@@ -160,8 +86,7 @@ augroup myphp
 	au! InsertLeave,WinLeave <buffer> if exists('w:lastFoldMethod') | let &l:foldmethod=w:lastFoldMethod | unlet w:lastFoldMethod | endif
 	au! BufRead,BufWrite <buffer> call <SID>cleanFile()
 	au! BufEnter <buffer> setlocal foldtext=MyPhpFoldText()
-	au BufEnter <buffer> call <SID>risingsun(expand('<afile>'))
-	au! CursorMoved <buffer> call <SID>highlightVariable()
+	au! CursorHold <buffer> call <SID>highlightVariable()
 augroup end
 
 ia func function

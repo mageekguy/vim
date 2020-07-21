@@ -1,0 +1,1 @@
+/Users/mageekguy/php.vim/syntax/php.vim
