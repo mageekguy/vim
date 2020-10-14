@@ -23,9 +23,12 @@ function! MyPhpFoldText()
 
 	let line = substitute(line, '\s*{$', '', '')
 
-	return substitute(line, '	', repeat(' ', &tabstop), 'g') . ' [' . ((v:foldend - v:foldstart) + 1) . ']'
+	return substitute(line, '	', repeat(' ', &tabstop), 'g') . ' ' . ((v:foldend - v:foldstart) + 1)
 endfunction
 
+setlocal signcolumn="auto"
+setlocal relativenumber
+setlocal iskeyword+=$
 setlocal noexpandtab
 setlocal tabstop=3
 setlocal shiftwidth=3
@@ -38,7 +41,7 @@ setlocal dictionary+=~/.vim/dict/php.txt
 setlocal complete+=k/.vim/dict/php.txt
 setlocal wildignore=.tags,tags,*.svn,.git,GPATH,GRTAGS,GSYMS,GTAGS
 setlocal cindent
-setlocal cinoptions=(s,U1,(s,m1
+setlocal cinoptions+=(s,U1,(s,m1
 setlocal matchpairs-=<:>
 setlocal foldtext=MyPhpFoldText()
 setlocal noeol
@@ -73,13 +76,18 @@ endfunction
 
 let s:oldKeyword = ''
 
-
 function! s:highlightVariable()
 	let cword = expand('<cword>')
-	let l:syntaxgroup = synIDattr(synIDtrans(synID(line('.'), stridx(getline('.'), l:cword) + 1, 1)), 'name')
-	let highlight = l:syntaxgroup != 'Identifier' ? '\V\<\>' :  printf('\$\<%s\>', escape(l:cword, '/\'))
+	let position = getcurpos()
+	norm! b
+	let current = strcharpart(strpart(getline('.'), col('.') - 1), 0, 1) == '$' ? '' : '->'
+	call setpos('.', l:position)
+	let l:syntaxgroup = synIDattr(synIDtrans(synID(l:position[1], l:position[2], 1)), 'name')
+	let highlight = l:syntaxgroup != 'Identifier' ? '\V\<\>' : printf('%s\<%s\>', l:current, escape(l:cword, '/\'))
 	exe 'match IncSearch /' . l:highlight . '/'
 endfunction
+
+set updatetime=200
 
 augroup myphp
 	au! InsertEnter <buffer> if !exists('w:lastFoldMethod') | let w:lastFoldMethod=&foldmethod | setlocal foldmethod=manual | endif
@@ -88,7 +96,5 @@ augroup myphp
 	au! BufEnter <buffer> setlocal foldtext=MyPhpFoldText()
 	au! CursorHold <buffer> call <SID>highlightVariable()
 augroup end
-
-ia func function
 
 " vim:filetype=vim foldmethod=marker shiftwidth=3 tabstop=3
