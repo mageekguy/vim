@@ -12,12 +12,21 @@ endif
 if !exists('g:atoum#_')
 	let g:atoum#_ = ''
 endif
+if !exists('g:atoum#strip')
+	let g:atoum#strip = ''
+endif
 if !exists('g:atoum#unitTestDirectory')
 	let g:atoum#unitTestDirectory = 'tests/units/'
 endif
 "run {{{1
 function atoum#run(file, bang, args)
-	let _ = a:bang != '' ? g:atoum#_ : g:atoum#php . ' -f ' . a:file . ' -- -c ' . g:atoum#configuration
+	let file = a:file
+
+	if (g:atoum#strip != '')
+		let file = substitute(file, g:atoum#strip, '', '')
+	endif
+
+	let _ = a:bang != '' ? g:atoum#_ : g:atoum#php . ' -f ' . file . ' -- -c ' . g:atoum#configuration
 
 	if (_ != '')
 		let g:atoum#_ = _
