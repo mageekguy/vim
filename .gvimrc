@@ -13,7 +13,6 @@ set guicursor=n:block
 set antialias
 
 if has("gui_macvim")
-	set fullscreen
 	set fuoptions=maxvert,maxhorz
 
 	nmap <silent> <C-S-Right> :maca _cycleWindowsBackwards:<CR>
