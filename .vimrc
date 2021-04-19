@@ -41,7 +41,7 @@ set incsearch
 set laststatus=2
 set lazyredraw
 set list
-set listchars=tab:\│\ ,trail:-,precedes:<,extends:>,nbsp:↓
+set listchars=tab:\│\ ,trail:·,precedes:<,extends:>,nbsp:↓
 set linebreak
 set modeline
 set nocompatible
@@ -52,6 +52,7 @@ set noexpandtab
 set nojoinspaces
 set noswapfile
 set nowrap
+set formatoptions+=j
 set nrformats=octal,hex,alpha
 set number
 set ruler
@@ -61,7 +62,7 @@ set selection=inclusive
 set shiftround
 set shiftwidth=3
 set showcmd
-set showmatch
+set noshowmatch
 set showmode
 set showtabline=1
 set sidescroll=1
@@ -112,8 +113,6 @@ if v:version >= 703
 	set undofile
 	set undodir=~/.vimundo
 	set norelativenumber
-
-	nnoremap <silent> <F2> :execute 'set ' . (&relativenumber ? 'norelativenumber' : 'relativenumber')<CR>
 endif
 
 let g:solarized_underline=0
@@ -127,7 +126,6 @@ let mapleader = "\<Space>"
 let maplocalleader = ','
 
 filetype plugin on
-filetype indent off
 
 nnoremap <silent> <C-S-Up> <C-W>k<C-W>_
 nnoremap <silent> <C-S-Down> <C-W>j<C-W>_
@@ -189,9 +187,6 @@ inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 inoremap <silent> <expr> <C-Tab> coc#refresh()
 
 nmap <leader>rn <Plug>(coc-rename)
-
-let g:phpErrorMarker#autowrite = 1
-let g:phpErrorMarker#automake = 1
 
 let s:_ = ''
 
@@ -278,7 +273,7 @@ augroup vimrc
 	au BufEnter * sign define dummy
 	au BufEnter * execute 'sign place 9999 line=1 name=dummy buffer=' . bufnr('')
 
-	execute 'au BufWritePost .vimrc source %'
+	au BufWritePost .vimrc source %
 augroup end
 
 vmap <Leader>y "+y
@@ -306,8 +301,9 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
-" Highlight symbol under cursor on CursorHold
-autocmd CursorHold * silent call CocActionAsync('highlight')
+map <silent> <Leader>b :call setbufvar(winbufnr(popup_atcursor(systemlist("cd " . shellescape(fnamemodify(resolve(expand('%:p')), ":h")) . " && git log --no-merges -n 1 -L " . shellescape(line("v") . "," . line(".") . ":" . resolve(expand("%:p")))), { "padding": [1,1,1,1], "pos": "botleft", "wrap": 0 })), "&filetype", "git")<CR>
+
+autocmd Filetype yaml setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 
 let g:echodoc#enable_at_startup=1
 
