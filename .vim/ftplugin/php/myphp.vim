@@ -8,6 +8,9 @@ endif
 
 let b:did_ftplugin = 1
 
+let g:phpErrorMarker#autowrite = 1
+let g:phpErrorMarker#automake = 1
+
 function! MyPhpFoldText()
 	let line = getline(v:foldstart)
 
@@ -40,8 +43,10 @@ setlocal errorformat=%m\ in\ %f\ on\ line\ %l
 setlocal dictionary+=~/.vim/dict/php.txt
 setlocal complete+=k/.vim/dict/php.txt
 setlocal wildignore=.tags,tags,*.svn,.git,GPATH,GRTAGS,GSYMS,GTAGS
+
 setlocal cindent
-setlocal cinoptions+=(s,U1,(s,m1
+setlocal cinoptions+=(s,U1,(s,m1,j1
+
 setlocal matchpairs-=<:>
 setlocal foldtext=MyPhpFoldText()
 setlocal noeol
@@ -77,14 +82,19 @@ endfunction
 let s:oldKeyword = ''
 
 function! s:highlightVariable()
-	let cword = expand('<cword>')
-	let position = getcurpos()
-	norm! b
-	let current = strcharpart(strpart(getline('.'), col('.') - 1), 0, 1) == '$' ? '' : '->'
-	call setpos('.', l:position)
-	let l:syntaxgroup = synIDattr(synIDtrans(synID(l:position[1], l:position[2], 1)), 'name')
-	let highlight = l:syntaxgroup != 'Identifier' ? '\V\<\>' : printf('%s\<%s\>', l:current, escape(l:cword, '/\'))
-	exe 'match IncSearch /' . l:highlight . '/'
+	if getline('.')
+		let cword = expand('<cword>')
+
+		if cword
+			let position = getcurpos()
+			norm! b
+			let current = strcharpart(strpart(getline('.'), col('.') - 1), 0, 1) == '$' ? '' : '->'
+			call setpos('.', l:position)
+			let l:syntaxgroup = synIDattr(synIDtrans(synID(l:position[1], l:position[2], 0)), 'name')
+			let highlight = l:syntaxgroup != 'Identifier' ? '\V\<\>' : printf('%s\<%s\>', l:current, escape(l:cword, '/\'))
+			exe 'match IncSearch /' . l:highlight . '/'
+		endif
+	endif
 endfunction
 
 set updatetime=200
