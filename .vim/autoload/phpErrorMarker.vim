@@ -26,7 +26,7 @@ if !exists('g:phpErrorMarker#filter')
 endif
 
 if !exists('g:phpErrorMarker#errorformat')
-	let g:phpErrorMarker#errorformat = '%A,%C%s:\ %m\ in\ %f\ on\ line\ %l,%Z%s'
+	let g:phpErrorMarker#errorformat = '%m\ in\ %f\ on\ line\ %l'
 endif
 
 if !exists('g:phpErrorMarker#textError')
@@ -103,7 +103,7 @@ function phpErrorMarker#markErrors()
 			normal! zv
 
 			if g:phpErrorMarker#openQuickfix
-				copen
+				clist
 			endif
 		endif
 	endif
