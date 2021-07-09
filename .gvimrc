@@ -18,8 +18,7 @@ if has("gui_macvim")
 	nmap <silent> <C-S-Right> :maca _cycleWindowsBackwards:<CR>
 	nmap <silent> <C-S-Left> :maca _cycleWindows:<CR>
 	set macligatures
-	set guifont=Fira\ Code:h12
-
+	set guifont=FiraCode-Light:h12
 	aunmenu TouchBar
 	autocmd! FullScreenTouchBar
 	an TouchBar.-Sep1- <Nop>
