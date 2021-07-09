@@ -30,13 +30,12 @@ function! MyPhpFoldText()
 endfunction
 
 setlocal signcolumn="auto"
-setlocal relativenumber
-setlocal iskeyword+=$
+setlocal norelativenumber
 setlocal noexpandtab
 setlocal tabstop=3
 setlocal shiftwidth=3
 setlocal rtp+=~/.vim/doc/php
-setlocal formatoptions=tcqlro
+setlocal formatoptions=tcqlroj
 setlocal keywordprg=:help
 setlocal makeprg=/usr/bin/php\ -l\ %
 setlocal errorformat=%m\ in\ %f\ on\ line\ %l
@@ -44,6 +43,8 @@ setlocal dictionary+=~/.vim/dict/php.txt
 setlocal complete+=k/.vim/dict/php.txt
 setlocal wildignore=.tags,tags,*.svn,.git,GPATH,GRTAGS,GSYMS,GTAGS
 
+setlocal autoindent
+setlocal smartindent
 setlocal cindent
 setlocal cinoptions+=(s,U1,(s,m1,j1
 
@@ -79,32 +80,11 @@ function! s:selectFunctionInVisualMode()
 	execute 'keepjumps normal vi{'
 endfunction
 
-let s:oldKeyword = ''
-
-function! s:highlightVariable()
-	if getline('.')
-		let cword = expand('<cword>')
-
-		if cword
-			let position = getcurpos()
-			norm! b
-			let current = strcharpart(strpart(getline('.'), col('.') - 1), 0, 1) == '$' ? '' : '->'
-			call setpos('.', l:position)
-			let l:syntaxgroup = synIDattr(synIDtrans(synID(l:position[1], l:position[2], 0)), 'name')
-			let highlight = l:syntaxgroup != 'Identifier' ? '\V\<\>' : printf('%s\<%s\>', l:current, escape(l:cword, '/\'))
-			exe 'match IncSearch /' . l:highlight . '/'
-		endif
-	endif
-endfunction
-
-set updatetime=200
-
 augroup myphp
 	au! InsertEnter <buffer> if !exists('w:lastFoldMethod') | let w:lastFoldMethod=&foldmethod | setlocal foldmethod=manual | endif
 	au! InsertLeave,WinLeave <buffer> if exists('w:lastFoldMethod') | let &l:foldmethod=w:lastFoldMethod | unlet w:lastFoldMethod | endif
 	au! BufRead,BufWrite <buffer> call <SID>cleanFile()
 	au! BufEnter <buffer> setlocal foldtext=MyPhpFoldText()
-	au! CursorHold <buffer> call <SID>highlightVariable()
 augroup end
 
 " vim:filetype=vim foldmethod=marker shiftwidth=3 tabstop=3
