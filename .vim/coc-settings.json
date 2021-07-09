@@ -13,5 +13,6 @@
 	"diagnostic.infoSign": "🌈",
 	"diagnostic.hintSign": "💥",
 	"suggest.echodocSupport": true,
-	"search.useIgnoreFiles": false
+	"search.useIgnoreFiles": false,
+	"phpls.path": "/Users/mageekguy/intelephense/node_modules/intelephense"
 }
