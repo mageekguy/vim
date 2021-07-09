@@ -4,7 +4,7 @@
 "=============================================================================
 function! StatuslineGit(path)
   let b:GitBranch = system("git -C " . a:path . " rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
-  let b:GitBranch = strlen(b:GitBranch) > 0 ? '|' . b:GitBranch : ''
+  let b:GitBranch = strlen(b:GitBranch) > 0 ? b:GitBranch : ''
 endfunction
 
 augroup GitBranch
@@ -12,8 +12,7 @@ augroup GitBranch
   autocmd CursorHold,BufEnter,BufNewFile,BufReadPost * call g:StatuslineGit(expand('%:h'))
 augroup END
 
-set regexpengine=1
-set relativenumber
+set regexpengine=0
 set exrc
 set secure
 set autoindent
@@ -40,6 +39,7 @@ set ignorecase
 set incsearch
 set laststatus=2
 set lazyredraw
+set redrawtime=1000
 set list
 set listchars=tab:\│\ ,trail:·,precedes:<,extends:>,nbsp:↓
 set linebreak
@@ -76,8 +76,8 @@ set statusline+=\│%-4{&ff}
 set statusline+=\│%-7{(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\")}
 set statusline+=\│%-7{&filetype}
 set statusline+=\│%{(!&modifiable?'○':(&modified>0?'●':'\ '))}
-set statusline+=%{printf('%s',exists(\"b:GitBranch\")?b:GitBranch:\'\')}
-set statusline+=\|%{coc#status()} 
+set statusline+=\│%{printf('%s',b:GitBranch)}
+set statusline+=\│%{coc#status()} 
 set statusline+=%w%f
 set statusline+=%=
 set statusline+=\│%6c
@@ -108,12 +108,9 @@ set termguicolors
 set updatetime=200
 set signcolumn=number
 set shortmess+=c
-
-if v:version >= 703
-	set undofile
-	set undodir=~/.vimundo
-	set norelativenumber
-endif
+set undofile
+set undodir=~/.vimundo
+set norelativenumber
 
 let g:solarized_underline=0
 let g:solarized_visibility="normal"
@@ -220,6 +217,35 @@ endfunction
 command! -complete=shellcmd -nargs=* -bang Shell call s:ExecuteInShell(<q-args>, '<bang>')
 cabbrev shell Shell
 
+function! s:GitBlame()
+	let file = resolve(expand('%'))
+	let filetype = &filetype
+
+	execute ':silent! leftabove vsp ' . tempname()
+	execute ':silent! setlocal modifiable'
+	execute ':0r !git blame -- ' . file
+	execute ':silent! $d'
+	execute ':silent! %s/).*$/)/'
+	execute ':silent! %s/^\([^ ]\+\) (\([^ ]\+\) \([^ ]\+\) \([^ ]\+\) \(\d\+\) \([^ ]\+\).*$/\=printf("%s %s %s %2d %s %s", submatch(2), submatch(3), submatch(4), submatch(5), submatch(6), submatch(1))/'
+	execute ':silent! setlocal foldlevel=999'
+	execute ':silent! setlocal readonly'
+	execute ':silent! setlocal ft=' . filetype
+	execute ':silent! setlocal scrollbind'
+	execute ':silent! setlocal cursorbind'
+	execute ':silent! setlocal nonumber'
+	execute ':silent! setlocal norelativenumber'
+	execute ':silent! setlocal scl=no'
+	execute ':silent! vertical resize ' . (max(map(getline(1,'$'), 'len(v:val)')) + 1)
+	setlocal buftype=nowrite bufhidden=wipe nobuflisted noswapfile
+	execute "normal \<C-W>p"
+	execute ':silent! setlocal foldlevel=999'
+	execute ':silent! setlocal scrollbind'
+	execute ':silent! setlocal cursorbind'
+	execute 'syncbind'
+endfunction
+
+command! -nargs=0 GitBlame call s:GitBlame()
+
 function! s:GitPrevious()
 	let directory = fnamemodify(resolve(expand('%')), ':h')
 	let file = fnamemodify(resolve(expand('%')), ':t')
@@ -306,6 +332,7 @@ map <silent> <Leader>b :call setbufvar(winbufnr(popup_atcursor(systemlist("cd " 
 autocmd Filetype yaml setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 
 let g:echodoc#enable_at_startup=1
+let g:echodoc#type = 'floating'
 
 call plug#begin('~/.vim/plugged')
 
