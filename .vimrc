@@ -9,7 +9,7 @@ endfunction
 
 augroup GitBranch
   autocmd!
-  autocmd CursorHold,BufEnter,BufNewFile,BufReadPost * call g:StatuslineGit(expand('%:h'))
+  autocmd BufEnter,BufNewFile,BufReadPost * call g:StatuslineGit(expand('%:h'))
 augroup END
 
 set regexpengine=0
@@ -76,8 +76,8 @@ set statusline+=\│%-4{&ff}
 set statusline+=\│%-7{(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\")}
 set statusline+=\│%-7{&filetype}
 set statusline+=\│%{(!&modifiable?'○':(&modified>0?'●':'\ '))}
-set statusline+=\│%{printf('%s',b:GitBranch)}
-set statusline+=\│%{coc#status()} 
+set statusline+=\│%{printf('%s',exists('b:GitBranch')?b:GitBranch:'')}
+set statusline+=\│%{coc#status()}%{get(b:,'coc_current_function','')} 
 set statusline+=%w%f
 set statusline+=%=
 set statusline+=\│%6c
@@ -183,6 +183,8 @@ inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 inoremap <silent> <expr> <C-Tab> coc#refresh()
 
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
 nmap <leader>rn <Plug>(coc-rename)
 
 let s:_ = ''
@@ -212,6 +214,19 @@ function! s:ExecuteInShell(command, bang)
 		nnoremap <silent> <buffer> <C-W>_ :execute 'resize ' . line('$')<CR>
 		silent! syntax on
 	endif
+endfunction
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>showDocumentation()<CR>
+
+function! s:showDocumentation()
+if (index(['vim','help'], &filetype) >= 0)
+	execute 'h '.expand('<cword>')
+elseif (coc#rpc#ready())
+	call CocActionAsync('doHover')
+else
+	execute '!' . &keywordprg . " " . expand('<cword>')
+endif
 endfunction
 
 command! -complete=shellcmd -nargs=* -bang Shell call s:ExecuteInShell(<q-args>, '<bang>')
@@ -300,6 +315,9 @@ augroup vimrc
 	au BufEnter * execute 'sign place 9999 line=1 name=dummy buffer=' . bufnr('')
 
 	au BufWritePost .vimrc source %
+
+	au User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+	au CursorHold * silent call CocActionAsync('highlight')
 augroup end
 
 vmap <Leader>y "+y

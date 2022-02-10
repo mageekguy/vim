@@ -5,14 +5,12 @@
 	"suggest.noselect": false,
 	"suggest.acceptSuggestionOnCommitCharacter": true,
 	"suggest.snippetIndicator": " ►",
-	"suggest.basic": false,
 	"intelephense.licenceKey": "00PA7YC96MUUKNG",
 	"intelephense.completion.insertUseDeclaration": true,
 	"diagnostic.errorSign": "💩",
 	"diagnostic.warningSign": "⚡︎",
 	"diagnostic.infoSign": "🌈",
 	"diagnostic.hintSign": "💥",
-	"suggest.echodocSupport": true,
-	"search.useIgnoreFiles": false,
+	"suggest.echodocSupport": false,
 	"phpls.path": "/Users/mageekguy/intelephense/node_modules/intelephense"
 }
